@@ -11,7 +11,7 @@ import java.util.Deque;
  *
  * @author Matheus
  */
-public class Function {
+public class DLXFunction {
     
     private static void cover(DLXNode targetNode){ 
         System.out.println("Cover: " + targetNode.columnNode.getName());

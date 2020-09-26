@@ -114,7 +114,7 @@ public class DLXMatrix {
         DLXNode node = instantiateFromMatrix(test);
         System.out.println("Root node: " + node.getName());
         Deque answer = new LinkedList();
-        Function.search(node, answer);
+        DLXFunction.search(node, answer);
         System.out.println("------------------------");
         for (Object object : answer) {
             DLXNode nodeAnswer = (DLXNode)object;
