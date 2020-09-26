@@ -7,16 +7,24 @@ package org.acabativa.dlxbr;
 
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
  * @author Matheus
  */
-public class DLXFunction {
+public class DLXSolver {
     
-    public static Deque mySolution;
+    private static List mySolution;
+
+    public List getMySolution() {
+        if(mySolution==null){
+            throw new IllegalStateException("Must execute search first");
+        }
+        return mySolution;
+    }
     
-    private static void cover(DLXNode targetNode){ 
+    private void cover(DLXNode targetNode){ 
         System.out.println("Cover: " + targetNode.columnNode.getName());
         DLXNode colNode = targetNode.columnNode; 
         colNode.left.right = colNode.right; 
@@ -32,8 +40,7 @@ public class DLXFunction {
         } 
     } 
     
-    
-    private static void uncover(DLXNode targetNode){ 
+    private void uncover(DLXNode targetNode){ 
         System.out.println("Uncover: " + targetNode.getName());
         DLXNode colNode = targetNode.columnNode;
         for(DLXNode rowNode = colNode.up; rowNode != colNode; rowNode = rowNode.up){ 
@@ -48,8 +55,7 @@ public class DLXFunction {
         colNode.right.left = colNode; 
     } 
   
-
-    private static DLXNode getMinColumn(DLXNode header){ 
+    private DLXNode getMinColumn(DLXNode header){ 
         DLXNode minCol = header.getColumnNode(); 
         DLXNode h = minCol.right; 
         while(h!=header.getColumnNode()){ 
@@ -61,18 +67,20 @@ public class DLXFunction {
         return minCol; 
     }
     
+    public void solveProblem(DLXNode header){
+        Deque answer = new LinkedList();
+        search(header, answer);
+    }
     
-    public static void search(DLXNode header, Deque<DLXNode> solutions) { 
+    private void search(DLXNode header, Deque<DLXNode> solutions) { 
         if(header.right == header){ 
             System.out.println("Search: " + solutions);
             System.out.println("END");
             mySolution = new LinkedList(solutions);
             return; 
-        } 
-
+        }
         DLXNode column = getMinColumn(header); 
         cover(column); 
-
         for(DLXNode rowNode = column.down; rowNode != column; rowNode = rowNode.down){ 
             solutions.addLast(rowNode.getColumnNode()); 
             for(DLXNode rightNode = rowNode.right; rightNode != rowNode; rightNode = rightNode.right){ 
@@ -85,7 +93,6 @@ public class DLXFunction {
                 uncover(leftNode); 
             }
         }
-        
         uncover(column); 
     } 
     

@@ -5,16 +5,13 @@
  */
 package org.acabativa.dlxbr;
 
-import java.util.Deque;
-import java.util.LinkedList;
-
 /**
  *
  * @author Matheus
  */
 public class DLXMatrix {
     
-    public static DLXNode instantiateFromMatrix(int [][] primitiveMatrix){
+    public static DLXNode instantiateFrom2DArray(int [][] primitiveMatrix){
         DLXNode[][] matrix = createObjectArray(primitiveMatrix);
         DLXNode header = createHeaderNode();   
         
@@ -91,7 +88,7 @@ public class DLXMatrix {
         return matrix;
     }
     
-    private static int [][] generateTestCase(){
+    public static int [][] generateTestCase(){
         int [][] test = new int [6][7];
         //A
         test[1][0] = 1;
@@ -119,7 +116,7 @@ public class DLXMatrix {
         return test;
     }
     
-    private static int[][] tcreateTestCase2(){
+    public static int[][] tcreateTestCase2(){
         int [][] test = new int [6][7];
         //A
         test[0][0] = 1;
@@ -147,25 +144,6 @@ public class DLXMatrix {
         return test;
     } 
     
-    public static void main(String[] args) {
-        
-        int [][] test = generateTestCase();
-        
-        DLXNode node = instantiateFromMatrix(test);
-        System.out.println("Root node: " + node.getName());
-        Deque answer = new LinkedList();
-        DLXFunction.search(node, answer);
-        System.out.println("------------------------");
-        for (Object object : DLXFunction.mySolution) {
-            DLXNode nodeAnswer = (DLXNode)object;
-            System.out.println(" 1" + nodeAnswer.getName());
-        }
-//        node.printRight();
-//        node.down.printRight();
-//        DLXFunction.cover(node);
-//        node.down.printRight();
-                
-                
-    }
+   
     
 }
