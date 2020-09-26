@@ -6,12 +6,15 @@
 package org.acabativa.dlxbr;
 
 import java.util.Deque;
+import java.util.LinkedList;
 
 /**
  *
  * @author Matheus
  */
 public class DLXFunction {
+    
+    public static Deque mySolution;
     
     private static void cover(DLXNode targetNode){ 
         System.out.println("Cover: " + targetNode.columnNode.getName());
@@ -25,7 +28,6 @@ public class DLXFunction {
                 rightNode.up.down = rightNode.down; 
                 rightNode.down.up = rightNode.up; 
                 rightNode.columnNode.setColumnSize(rightNode.columnNode.getColumnSize()-1); 
-                //System.out.println("New column size : "+ rightNode.columnNode.getName());
             } 
         } 
     } 
@@ -36,7 +38,7 @@ public class DLXFunction {
         DLXNode colNode = targetNode.columnNode;
         for(DLXNode rowNode = colNode.up; rowNode != colNode; rowNode = rowNode.up){ 
             for(DLXNode leftNode = rowNode.left; leftNode != rowNode; leftNode = leftNode.left){ 
-                System.out.println("Add Uncover: " + leftNode.getName());
+                System.out.println("\tUncover: " + leftNode.getName());
                 leftNode.up.down = leftNode; 
                 leftNode.down.up = leftNode; 
                 leftNode.columnNode.setColumnSize(leftNode.columnNode.getColumnSize()+1); 
@@ -48,7 +50,6 @@ public class DLXFunction {
   
 
     private static DLXNode getMinColumn(DLXNode header){ 
-        //System.out.println("Getting min column: " + header.getName());
         DLXNode minCol = header.getColumnNode(); 
         DLXNode h = minCol.right; 
         while(h!=header.getColumnNode()){ 
@@ -60,44 +61,31 @@ public class DLXFunction {
         return minCol; 
     }
     
-    private static DLXNode getMinColumn2(DLXNode header){ 
-        DLXNode h = header.getColumnNode(); 
-        DLXNode min_col = h.right; 
-         
-  
-    return min_col; 
-} 
-  
-  
+    
     public static void search(DLXNode header, Deque<DLXNode> solutions) { 
-        
         if(header.right == header){ 
             System.out.println("Search: " + solutions);
             System.out.println("END");
+            mySolution = new LinkedList(solutions);
             return; 
         } 
 
         DLXNode column = getMinColumn(header); 
-        System.out.println("Min column: " + column.getName());
         cover(column); 
 
         for(DLXNode rowNode = column.down; rowNode != column; rowNode = rowNode.down){ 
             solutions.addLast(rowNode.getColumnNode()); 
-
             for(DLXNode rightNode = rowNode.right; rightNode != rowNode; rightNode = rightNode.right){ 
                 cover(rightNode); 
             }
-            header.printRight();
             search(header, solutions); 
-
             solutions.removeLast();
-
             column = rowNode.columnNode; 
             for(DLXNode leftNode = rowNode.left; leftNode != rowNode; leftNode = leftNode.left){ 
                 uncover(leftNode); 
             }
-        } 
-
+        }
+        
         uncover(column); 
     } 
     

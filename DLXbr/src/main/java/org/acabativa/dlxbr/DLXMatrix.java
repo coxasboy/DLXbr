@@ -14,7 +14,60 @@ import java.util.LinkedList;
  */
 public class DLXMatrix {
     
-    private static DLXNode instantiateFromMatrix(int [][] primitiveMatrix){
+    public static DLXNode instantiateFromMatrix(int [][] primitiveMatrix){
+        DLXNode[][] matrix = createObjectArray(primitiveMatrix);
+        DLXNode header = createHeaderNode();   
+        
+        linkRight(header, matrix);
+        linkDown(matrix);
+       
+        return header;        
+    }
+    
+    private static void linkDown(DLXNode[][] matrix){
+        for (int i = 0; i < matrix[0].length; i++) {
+            DLXNode lastNode = null;
+            for (int j = 0; j < matrix.length; j++) {
+                DLXNode dLXNode = matrix[j][i];
+                if(dLXNode!=null){
+                    if(lastNode!=null){
+                        lastNode.linkDown(dLXNode);
+                    }
+                    lastNode = dLXNode;
+                }
+            }
+        }
+    }
+    
+    private static void linkRight(DLXNode header, DLXNode[][] matrix){
+        for (int i = 0; i < matrix.length; i++) {
+            DLXNode[] dLXNodes = matrix[i];
+            DLXNode lastNode = null;
+            if(i==0){
+                lastNode = header;
+            }
+            for (int j = 0; j < dLXNodes.length; j++) {
+                DLXNode dLXNode = dLXNodes[j];
+                if(dLXNode!=null){
+                    if(lastNode!=null){
+                        lastNode.linkRight(dLXNode);
+                    }
+                    lastNode = dLXNode;
+                }
+            }
+        }
+    }
+    
+    private static DLXNode createHeaderNode(){
+        DLXNode header = new DLXNode(true);
+        header.setIndexColumn(-1);
+        header.setIndexRow(-1);
+        header.setName("header");
+        header.setColumnSize(Integer.MAX_VALUE);
+        return header;
+    }
+    
+    private static DLXNode[][] createObjectArray(int [][] primitiveMatrix){
         DLXNode [][] matrix = new DLXNode[primitiveMatrix.length+1][primitiveMatrix[0].length];
         for (int i = 0; i < matrix[0].length; i++) {
             matrix[0][i] = new DLXNode(true);
@@ -35,44 +88,7 @@ public class DLXMatrix {
                 }
             }
         }
-        DLXNode header = new DLXNode(true);
-        header.setIndexColumn(-1);
-        header.setIndexRow(-1);
-        header.setName("header");
-        header.setColumnSize(Integer.MAX_VALUE);   
-        //System.out.println("----------!!!!!!!!!");
-        for (int i = 0; i < matrix.length; i++) {
-            DLXNode[] dLXNodes = matrix[i];
-            DLXNode lastNode = null;
-            if(i==0){
-                lastNode = header;
-            }
-            for (int j = 0; j < dLXNodes.length; j++) {
-                DLXNode dLXNode = dLXNodes[j];
-                if(dLXNode!=null){
-                    if(lastNode!=null){
-                        System.out.println(lastNode.getName() + " Linking right: " + dLXNode.getName());
-                        lastNode.linkRight(dLXNode);
-                    }
-                    lastNode = dLXNode;
-                }
-            }
-        }
-        for (int i = 0; i < matrix[0].length; i++) {
-            DLXNode lastNode = null;
-            for (int j = 0; j < matrix.length; j++) {
-                DLXNode dLXNode = matrix[j][i];
-                if(dLXNode!=null){
-                    if(lastNode!=null){
-                        lastNode.linkDown(dLXNode);
-                        System.out.println(lastNode.getName() + " Linking down: " + dLXNode.getName());
-                    }
-                    lastNode = dLXNode;
-                }
-            }
-        }
-       
-        return header;        
+        return matrix;
     }
     
     private static int [][] generateTestCase(){
@@ -104,7 +120,31 @@ public class DLXMatrix {
     }
     
     private static int[][] tcreateTestCase2(){
-        return null;
+        int [][] test = new int [6][7];
+        //A
+        test[0][0] = 1;
+        test[1][0] = 1;
+        //B
+        test[2][1] = 1;
+        test[3][1] = 1;
+        //C
+        test[4][2] = 1;
+        test[5][2] = 1;
+        //D
+        test[1][3] = 1;
+        test[3][3] = 1;
+        test[5][3] = 1;
+        //E
+        test[0][4] = 1;
+        test[5][4] = 1;
+        //F
+        test[0][5] = 1;
+        test[2][5] = 1;
+        //G
+        test[1][6] = 1;
+        test[4][6] = 1;
+        test[5][6] = 1;
+        return test;
     } 
     
     public static void main(String[] args) {
@@ -116,7 +156,7 @@ public class DLXMatrix {
         Deque answer = new LinkedList();
         DLXFunction.search(node, answer);
         System.out.println("------------------------");
-        for (Object object : answer) {
+        for (Object object : DLXFunction.mySolution) {
             DLXNode nodeAnswer = (DLXNode)object;
             System.out.println(" 1" + nodeAnswer.getName());
         }
